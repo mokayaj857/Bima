@@ -1,0 +1,14 @@
+[
+  { "category": "AI" },
+  { "category": "Finance" },
+  { "category": "Cyber Security" },
+  { "category": "Blockchain" },
+  { "category": "Data Science" },
+  { "category": "Web Development" },
+  { "category": "Cloud Computing" },
+  { "category": "Mobile Development" },
+  { "category": "DevOps" },
+  { "category": "Machine Learning" },
+  { "category": "UI/UX Design" },
+  { "category": "Database Management" }
+]
