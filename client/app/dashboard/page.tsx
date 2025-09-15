@@ -12,7 +12,6 @@ import WaterConsumptionChart from '@/components/WaterConsumptionChart';
 import HistoricalDataChart from '@/components/HistoricalDataChart';
 import AnomalyDetection from '@/components/AnomalyDetection';
 import AnomalyAlert from '@/components/AnomalyAlert';
-import DraggableAIChat from '@/components/DraggableAIChat';
 
 interface NavLinkProps {
   children: React.ReactNode;
@@ -220,7 +219,6 @@ const BimaDashboard: React.FC = () => {
           )}
         </main>
       </div>
-      <DraggableAIChat />
     </div>
   );
 };

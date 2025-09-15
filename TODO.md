@@ -1,10 +1,8 @@
-# AI Assistant UI Adaptation Plan
+# TODO: Improve DraggableAIChat UI
 
-## Tasks
-- [x] Update floating button color from blue to orange (#F37933)
-- [x] Update chat header background to orange
-- [x] Update user message bubbles to orange background
-- [x] Add gold (#F3C80F) accents for creativity
-- [x] Improve shadows and add subtle animations
-- [x] Ensure good contrast and accessibility (focus states, etc.)
-- [ ] Test the updated UI
+- [ ] Adjust popup window size and position for better fit and usability
+- [ ] Fix textbox input field to be fully visible and usable (change to input or improve textarea)
+- [ ] Remove or simplify excessive animations and gradients on popup and button
+- [ ] Slightly simplify floating button size and interaction effects
+- [ ] Improve chat messages area spacing and readability
+- [ ] Test the updated UI for improvements

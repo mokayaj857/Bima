@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const passport = require('passport');
 const WebSocket = require('ws');
+const axios = require('axios');
 
 const sensorRoutes = require('./routes/sensorRoutes');
 const waterFlowRoutes = require('./routes/waterFlowRoutes');
@@ -67,6 +68,32 @@ passport.use(new GoogleStrategy({
 app.use('/api', sensorRoutes);
 app.use('/api', waterFlowRoutes);
 app.use('/api/auth', authRoutes);
+
+// AI chat route
+app.post('/api/ai-chat', async (req, res) => {
+  try {
+    const { message } = req.body;
+    if (!message) {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+
+    // Call free AI inference API (Hugging Face Inference API example)
+    const response = await axios.post(
+      'https://api-inference.huggingface.co/models/gpt2',
+      { inputs: message },
+      {
+        headers: { Authorization: `Bearer ${process.env.HF_API_TOKEN}` },
+      }
+    );
+
+    const aiResponse = response.data?.[0]?.generated_text || 'Sorry, I could not generate a response.';
+
+    res.json({ response: aiResponse });
+  } catch (error) {
+    console.error('AI chat error:', error.message);
+    res.status(500).json({ error: 'Failed to get AI response' });
+  }
+});
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
