@@ -157,7 +157,7 @@ const DraggableAIChat: React.FC = () => {
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.response,
+        text: data.reply,
         sender: 'ai',
         timestamp: new Date(),
       };
