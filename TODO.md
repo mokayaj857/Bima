@@ -1,8 +1,3 @@
-# TODO: Improve DraggableAIChat UI
-
-- [ ] Adjust popup window size and position for better fit and usability
-- [ ] Fix textbox input field to be fully visible and usable (change to input or improve textarea)
-- [ ] Remove or simplify excessive animations and gradients on popup and button
-- [ ] Slightly simplify floating button size and interaction effects
-- [ ] Improve chat messages area spacing and readability
-- [ ] Test the updated UI for improvements
+- [x] Complete the incomplete OpenAI chat completion call in client/app/api/ai-chat/route.ts by adding messages array, closing the create method, extracting response, and returning JSON.
+- [x] Add proper error handling in the catch block.
+- [x] Test the API endpoint to ensure it works without syntax errors.
