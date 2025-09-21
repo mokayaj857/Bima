@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+cdimport React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useSensorData } from '@/hooks/useSensorData';
 
@@ -10,13 +10,10 @@ const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ss
 
 const SensorMap: React.FC = () => {
   const sensorData = useSensorData();
-  const [renderMap, setRenderMap] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setRenderMap(true);
-    return () => {
-      setRenderMap(false);
-    };
+    setMounted(true);
   }, []);
 
   // Fallback to static data if no real-time data is available
@@ -29,32 +26,32 @@ const SensorMap: React.FC = () => {
 
   const sensorLocations = sensorData.length > 0 ? sensorData : staticSensorLocations;
 
+  if (!mounted) return null;
+
   return (
     <div className="h-96 w-full">
-      {renderMap && (
-        <MapContainer
-          center={[40.7128, -74.0060]}
-          zoom={12}
-          style={{ height: '100%', width: '100%' }}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          {sensorLocations.map(sensor => (
-            <Marker key={sensor.id} position={[sensor.lat, sensor.lng]}>
-              <Popup>
-                <div>
-                  <h3 className="font-bold">{sensor.name}</h3>
-                  <p>Status: {sensor.status}</p>
-                  <p>Lat: {sensor.lat.toFixed(4)}</p>
-                  <p>Lng: {sensor.lng.toFixed(4)}</p>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      )}
+      <MapContainer
+        center={[40.7128, -74.0060]}
+        zoom={12}
+        style={{ height: '100%', width: '100%' }}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        {sensorLocations.map(sensor => (
+          <Marker key={sensor.id} position={[sensor.lat, sensor.lng]}>
+            <Popup>
+              <div>
+                <h3 className="font-bold">{sensor.name}</h3>
+                <p>Status: {sensor.status}</p>
+                <p>Lat: {sensor.lat.toFixed(4)}</p>
+                <p>Lng: {sensor.lng.toFixed(4)}</p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
     </div>
   );
 };
