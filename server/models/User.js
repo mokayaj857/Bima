@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const ROLES = {
+  USER: 'user',
+  ADMIN: 'admin',
+};
+
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true },
@@ -8,7 +13,7 @@ const userSchema = new mongoose.Schema({
   provider: { type: String, default: 'local' },
   confirmed: { type: Boolean, default: true },
   blocked: { type: Boolean, default: false },
-  role: { type: String, default: 'user' },
+  role: { type: String, enum: Object.values(ROLES), default: ROLES.USER },
   googleId: { type: String },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
@@ -32,4 +37,10 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
+// Check if user is admin
+userSchema.methods.isAdmin = function() {
+  return this.role === ROLES.ADMIN;
+};
+
 module.exports = mongoose.model('User', userSchema);
+module.exports.ROLES = ROLES;

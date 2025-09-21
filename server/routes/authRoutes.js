@@ -23,7 +23,25 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Register new user
+// Middleware to authorize roles
+const authorizeRoles = (allowedRoles) => {
+  return async (req, res, next) => {
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      if (!allowedRoles.includes(user.role)) {
+        return res.status(403).json({ error: 'Access denied: insufficient permissions' });
+      }
+      next();
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+};
+
+
 router.post('/register', async (req, res) => {
   try {
     const { email, username, password } = req.body;
@@ -254,4 +272,8 @@ router.post('/google/token', async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = {
+  router,
+  authenticateToken,
+  authorizeRoles
+};

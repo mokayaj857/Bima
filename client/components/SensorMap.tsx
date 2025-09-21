@@ -1,22 +1,18 @@
-cdimport React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+import React from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { useSensorData } from '@/hooks/useSensorData';
 
-// Dynamically import Leaflet components to avoid SSR issues
-const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
-const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
-const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+// Component to update map view when center changes
+const ChangeView: React.FC<{ center: [number, number]; zoom: number }> = ({ center, zoom }) => {
+  const map = useMap();
+  map.setView(center, zoom);
+  return null;
+};
 
 const SensorMap: React.FC = () => {
   const sensorData = useSensorData();
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Fallback to static data if no real-time data is available
+  // Fallback static sensor locations if no real-time data
   const staticSensorLocations = [
     { id: 1, lat: 40.7128, lng: -74.0060, name: 'Sensor 1', status: 'Active' },
     { id: 2, lat: 40.7589, lng: -73.9851, name: 'Sensor 2', status: 'Active' },
@@ -26,15 +22,20 @@ const SensorMap: React.FC = () => {
 
   const sensorLocations = sensorData.length > 0 ? sensorData : staticSensorLocations;
 
-  if (!mounted) return null;
+  // Center map on first sensor location or default
+  const center: [number, number] = sensorLocations.length > 0
+    ? [sensorLocations[0].lat, sensorLocations[0].lng]
+    : [40.7128, -74.0060];
 
   return (
     <div className="h-96 w-full">
       <MapContainer
-        center={[40.7128, -74.0060]}
+        center={center}
         zoom={12}
         style={{ height: '100%', width: '100%' }}
+        key="sensor-map"
       >
+        <ChangeView center={center} zoom={12} />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

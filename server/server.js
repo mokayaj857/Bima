@@ -8,7 +8,10 @@ const axios = require('axios');
 
 const sensorRoutes = require('./routes/sensorRoutes');
 const waterFlowRoutes = require('./routes/waterFlowRoutes');
-const authRoutes = require('./routes/authRoutes');
+const authRoutesModule = require('./routes/authRoutes');
+const authRoutes = authRoutesModule.router;
+const authenticateToken = authRoutesModule.authenticateToken;
+const authorizeRoles = authRoutesModule.authorizeRoles;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -68,6 +71,9 @@ passport.use(new GoogleStrategy({
 app.use('/api', sensorRoutes);
 app.use('/api', waterFlowRoutes);
 app.use('/api/auth', authRoutes);
+
+// Example of protecting an admin route (to be implemented)
+// app.use('/api/admin', authenticateToken, authorizeRoles(['admin']), adminRoutes);
 
 // AI chat route
 app.post('/api/ai-chat', async (req, res) => {
