@@ -47,6 +47,12 @@ import {
   ShieldCheck,
   Menu,
   ArrowUp,
+  Brain,
+  Database,
+  Server,
+  Key,
+  Globe,
+  Shield,
   ArrowDown
 } from 'lucide-react';
 import { 
@@ -129,9 +135,39 @@ const tabs = [
 
 // Placeholder components for missing imports
 const AIRecommendations = () => (
-  <div className="p-6 bg-gray-800/50 rounded-xl border border-gray-700">
-    <h3 className="text-xl font-semibold mb-4">AI Recommendations</h3>
-    <p className="text-gray-400">AI recommendations will appear here.</p>
+  <div className="p-6 rounded-xl border-0 backdrop-blur-sm shadow-lg" style={{
+    background: 'linear-gradient(135deg, rgba(243, 121, 51, 0.1), rgba(243, 200, 15, 0.05))',
+    border: '1px solid rgba(243, 121, 51, 0.3)'
+  }}>
+    <h3 className="text-xl font-semibold mb-4" style={{
+      background: 'linear-gradient(135deg, #F37933, #F3C80F)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text'
+    }}>AI Recommendations</h3>
+    <div className="space-y-4">
+      <div className="p-4 bg-orange-500/10 rounded-lg border border-orange-500/20">
+        <h4 className="font-medium text-orange-400 mb-2">Water Usage Optimization</h4>
+        <p className="text-sm text-white/80">Consider reducing irrigation frequency during peak hours to save 15% on water costs.</p>
+        <Button size="sm" className="mt-2 bg-orange-500/20 text-orange-400 border-orange-500/30 hover:bg-orange-500/30">
+          Apply Recommendation
+        </Button>
+      </div>
+      <div className="p-4 bg-green-500/10 rounded-lg border border-green-500/20">
+        <h4 className="font-medium text-green-400 mb-2">Predictive Maintenance</h4>
+        <p className="text-sm text-white/80">Sensor #3 shows early signs of wear. Schedule maintenance within 2 weeks.</p>
+        <Button size="sm" className="mt-2 bg-green-500/20 text-green-400 border-green-500/30 hover:bg-green-500/30">
+          Schedule Maintenance
+        </Button>
+      </div>
+      <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
+        <h4 className="font-medium text-blue-400 mb-2">Anomaly Detection</h4>
+        <p className="text-sm text-white/80">Unusual flow pattern detected in Zone A. Investigation recommended.</p>
+        <Button size="sm" className="mt-2 bg-blue-500/20 text-blue-400 border-blue-500/30 hover:bg-blue-500/30">
+          Investigate
+        </Button>
+      </div>
+    </div>
   </div>
 );
 
@@ -218,36 +254,457 @@ const BillParsingUploader = () => {
 };
 
 const AdminPanel = () => {
+  const [activeSection, setActiveSection] = useState('overview');
+  const [systemStatus, setSystemStatus] = useState({
+    cpu: 45,
+    memory: 67,
+    storage: 23,
+    network: 89
+  });
+
   return (
-    <Card className="border-0 bg-gradient-to-br from-gray-900/80 to-gray-800/80 text-white backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">Admin Panel</CardTitle>
-        <CardDescription className="text-gray-300">Manage system settings and configurations</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <p className="text-gray-400">Admin features will appear here.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="bg-gray-800/50 border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-lg">User Management</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-400">Manage user accounts and permissions</p>
+    <div className="space-y-8">
+      {/* Admin Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="text-center"
+      >
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <motion.div
+            className="p-3 rounded-xl"
+            style={{ backgroundColor: 'rgba(243, 121, 51, 0.2)' }}
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          >
+            <ShieldCheck className="h-8 w-8" style={{ color: '#F37933' }} />
+          </motion.div>
+          <h2 className="text-2xl font-bold" style={{
+            background: 'linear-gradient(135deg, #F37933, #F3C80F)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}>
+            System Administration
+          </h2>
+        </div>
+        <p className="text-white/60">Comprehensive system management and monitoring tools</p>
+      </motion.div>
+
+      {/* Admin Navigation */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="flex flex-wrap gap-2 justify-center"
+      >
+        {[
+          { id: 'overview', label: 'Overview', icon: <LayoutDashboard className="h-4 w-4" /> },
+          { id: 'users', label: 'Users', icon: <Users className="h-4 w-4" /> },
+          { id: 'system', label: 'System', icon: <Server className="h-4 w-4" /> },
+          { id: 'security', label: 'Security', icon: <Shield className="h-4 w-4" /> },
+          { id: 'settings', label: 'Settings', icon: <Settings2 className="h-4 w-4" /> }
+        ].map((section) => (
+          <motion.button
+            key={section.id}
+            onClick={() => setActiveSection(section.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+              activeSection === section.id
+                ? 'text-white shadow-lg'
+                : 'text-white/70 hover:text-white hover:bg-white/5'
+            }`}
+            style={activeSection === section.id ? {
+              background: 'linear-gradient(135deg, #F37933, #F3C80F)',
+              boxShadow: '0 0 20px rgba(243, 121, 51, 0.3)'
+            } : {}}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {section.icon}
+            {section.label}
+          </motion.button>
+        ))}
+      </motion.div>
+
+      {/* System Overview */}
+      {activeSection === 'overview' && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="space-y-6"
+        >
+          {/* System Status Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Card className="border-0 backdrop-blur-sm shadow-lg" style={{
+                background: 'linear-gradient(135deg, rgba(243, 121, 51, 0.1), rgba(243, 200, 15, 0.05))',
+                border: '1px solid rgba(243, 121, 51, 0.3)'
+              }}>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <motion.div
+                      className="p-3 rounded-xl"
+                      style={{ backgroundColor: 'rgba(243, 121, 51, 0.2)' }}
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <Cpu className="h-6 w-6" style={{ color: '#F37933' }} />
+                    </motion.div>
+                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Healthy</Badge>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">CPU Usage</h3>
+                  <div className="text-3xl font-bold mb-2" style={{
+                    background: 'linear-gradient(135deg, #F37933, #F3C80F)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}>{systemStatus.cpu}%</div>
+                  <Progress value={systemStatus.cpu} className="h-2" />
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Card className="border-0 backdrop-blur-sm shadow-lg" style={{
+                background: 'linear-gradient(135deg, rgba(243, 121, 51, 0.1), rgba(243, 200, 15, 0.05))',
+                border: '1px solid rgba(243, 121, 51, 0.3)'
+              }}>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <motion.div
+                      className="p-3 rounded-xl"
+                      style={{ backgroundColor: 'rgba(243, 121, 51, 0.2)' }}
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                    >
+                      <Database className="h-6 w-6" style={{ color: '#F37933' }} />
+                    </motion.div>
+                    <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Warning</Badge>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Memory Usage</h3>
+                  <div className="text-3xl font-bold mb-2" style={{
+                    background: 'linear-gradient(135deg, #F37933, #F3C80F)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}>{systemStatus.memory}%</div>
+                  <Progress value={systemStatus.memory} className="h-2" />
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <Card className="border-0 backdrop-blur-sm shadow-lg" style={{
+                background: 'linear-gradient(135deg, rgba(243, 121, 51, 0.1), rgba(243, 200, 15, 0.05))',
+                border: '1px solid rgba(243, 121, 51, 0.3)'
+              }}>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <motion.div
+                      className="p-3 rounded-xl"
+                      style={{ backgroundColor: 'rgba(243, 121, 51, 0.2)' }}
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                    >
+                      <Server className="h-6 w-6" style={{ color: '#F37933' }} />
+                    </motion.div>
+                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Good</Badge>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Storage</h3>
+                  <div className="text-3xl font-bold mb-2" style={{
+                    background: 'linear-gradient(135deg, #F37933, #F3C80F)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}>{systemStatus.storage}%</div>
+                  <Progress value={systemStatus.storage} className="h-2" />
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+            >
+              <Card className="border-0 backdrop-blur-sm shadow-lg" style={{
+                background: 'linear-gradient(135deg, rgba(243, 121, 51, 0.1), rgba(243, 200, 15, 0.05))',
+                border: '1px solid rgba(243, 121, 51, 0.3)'
+              }}>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <motion.div
+                      className="p-3 rounded-xl"
+                      style={{ backgroundColor: 'rgba(243, 121, 51, 0.2)' }}
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
+                    >
+                      <Globe className="h-6 w-6" style={{ color: '#F37933' }} />
+                    </motion.div>
+                    <Badge className="bg-red-500/20 text-red-400 border-red-500/30">High</Badge>
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Network</h3>
+                  <div className="text-3xl font-bold mb-2" style={{
+                    background: 'linear-gradient(135deg, #F37933, #F3C80F)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}>{systemStatus.network}%</div>
+                  <Progress value={systemStatus.network} className="h-2" />
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          {/* Recent Activity */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+          >
+            <Card className="border-0 backdrop-blur-sm shadow-lg" style={{
+              background: 'linear-gradient(135deg, rgba(243, 121, 51, 0.1), rgba(243, 200, 15, 0.05))',
+              border: '1px solid rgba(243, 121, 51, 0.3)'
+            }}>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <motion.div
+                    className="p-2 rounded-lg"
+                    style={{ backgroundColor: 'rgba(243, 121, 51, 0.2)' }}
+                    animate={{ rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    <Activity className="h-5 w-5" style={{ color: '#F37933' }} />
+                  </motion.div>
+                  <h3 className="text-xl font-semibold">Recent System Activity</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  {[
+                    { action: 'User login', user: 'admin@bima.com', time: '2 minutes ago', status: 'success' },
+                    { action: 'System backup', user: 'system', time: '15 minutes ago', status: 'success' },
+                    { action: 'Sensor calibration', user: 'tech@bima.com', time: '1 hour ago', status: 'warning' },
+                    { action: 'Database update', user: 'system', time: '2 hours ago', status: 'success' },
+                    { action: 'Failed login attempt', user: 'unknown', time: '3 hours ago', status: 'error' }
+                  ].map((activity, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1 + index * 0.1 }}
+                      className="flex items-center gap-4 p-3 rounded-lg bg-white/5 border border-white/10"
+                    >
+                      <div className={`w-2 h-2 rounded-full ${
+                        activity.status === 'success' ? 'bg-green-400' :
+                        activity.status === 'warning' ? 'bg-yellow-400' : 'bg-red-400'
+                      }`} />
+                      <div className="flex-1">
+                        <p className="font-medium">{activity.action}</p>
+                        <p className="text-sm text-white/60">{activity.user}</p>
+                      </div>
+                      <div className="text-sm text-white/60">{activity.time}</div>
+                    </motion.div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
-            <Card className="bg-gray-800/50 border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-lg">System Settings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-400">Configure system preferences</p>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* User Management */}
+      {activeSection === 'users' && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Card className="border-0 backdrop-blur-sm shadow-lg" style={{
+            background: 'linear-gradient(135deg, rgba(243, 121, 51, 0.1), rgba(243, 200, 15, 0.05))',
+            border: '1px solid rgba(243, 121, 51, 0.3)'
+          }}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <motion.div
+                    className="p-2 rounded-lg"
+                    style={{ backgroundColor: 'rgba(243, 121, 51, 0.2)' }}
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <Users className="h-5 w-5" style={{ color: '#F37933' }} />
+                  </motion.div>
+                  <h3 className="text-xl font-semibold">User Management</h3>
+                </div>
+                <Button className="bg-orange-500/20 text-orange-400 border-orange-500/30 hover:bg-orange-500/30">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add User
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                {[
+                  { name: 'Admin User', email: 'admin@bima.com', role: 'Administrator', status: 'active', lastLogin: '2 minutes ago' },
+                  { name: 'John Doe', email: 'john@bima.com', role: 'Technician', status: 'active', lastLogin: '1 hour ago' },
+                  { name: 'Jane Smith', email: 'jane@bima.com', role: 'Operator', status: 'inactive', lastLogin: '2 days ago' },
+                  { name: 'Mike Johnson', email: 'mike@bima.com', role: 'Viewer', status: 'active', lastLogin: '30 minutes ago' }
+                ].map((user, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 + index * 0.1 }}
+                    className="flex items-center gap-4 p-4 rounded-lg bg-white/5 border border-white/10"
+                  >
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-orange-500/20 text-orange-400">
+                        {user.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <p className="font-medium">{user.name}</p>
+                      <p className="text-sm text-white/60">{user.email}</p>
+                    </div>
+                    <Badge className={`${
+                      user.role === 'Administrator' ? 'bg-red-500/20 text-red-400 border-red-500/30' :
+                      user.role === 'Technician' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
+                      user.role === 'Operator' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
+                      'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                    }`}>
+                      {user.role}
+                    </Badge>
+                    <Badge className={`${
+                      user.status === 'active' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
+                      'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                    }`}>
+                      {user.status}
+                    </Badge>
+                    <div className="text-sm text-white/60">{user.lastLogin}</div>
+                    <Button size="sm" variant="ghost" className="text-white/60 hover:text-white">
+                      <Settings2 className="h-4 w-4" />
+                    </Button>
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {/* System Settings */}
+      {activeSection === 'system' && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="space-y-6"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-0 backdrop-blur-sm shadow-lg" style={{
+              background: 'linear-gradient(135deg, rgba(243, 121, 51, 0.1), rgba(243, 200, 15, 0.05))',
+              border: '1px solid rgba(243, 121, 51, 0.3)'
+            }}>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <motion.div
+                    className="p-2 rounded-lg"
+                    style={{ backgroundColor: 'rgba(243, 121, 51, 0.2)' }}
+                    animate={{ rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    <Server className="h-5 w-5" style={{ color: '#F37933' }} />
+                  </motion.div>
+                  <h3 className="text-xl font-semibold">System Configuration</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span>Auto Backup</span>
+                    <Button size="sm" className="bg-green-500/20 text-green-400 border-green-500/30 hover:bg-green-500/30">
+                      Enabled
+                    </Button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Maintenance Mode</span>
+                    <Button size="sm" className="bg-gray-500/20 text-gray-400 border-gray-500/30 hover:bg-gray-500/30">
+                      Disabled
+                    </Button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Debug Logging</span>
+                    <Button size="sm" className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 hover:bg-yellow-500/30">
+                      Enabled
+                    </Button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Performance Monitoring</span>
+                    <Button size="sm" className="bg-green-500/20 text-green-400 border-green-500/30 hover:bg-green-500/30">
+                      Enabled
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 backdrop-blur-sm shadow-lg" style={{
+              background: 'linear-gradient(135deg, rgba(243, 121, 51, 0.1), rgba(243, 200, 15, 0.05))',
+              border: '1px solid rgba(243, 121, 51, 0.3)'
+            }}>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <motion.div
+                    className="p-2 rounded-lg"
+                    style={{ backgroundColor: 'rgba(243, 121, 51, 0.2)' }}
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <Database className="h-5 w-5" style={{ color: '#F37933' }} />
+                  </motion.div>
+                  <h3 className="text-xl font-semibold">Database Management</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span>Database Size</span>
+                    <span className="text-orange-400">2.4 GB</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Last Backup</span>
+                    <span className="text-green-400">2 hours ago</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Connection Pool</span>
+                    <span className="text-blue-400">45/100</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Query Performance</span>
+                    <span className="text-green-400">Excellent</span>
+                  </div>
+                  <Button className="w-full bg-orange-500/20 text-orange-400 border-orange-500/30 hover:bg-orange-500/30">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Database
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </motion.div>
+      )}
+    </div>
   );
 };
 
@@ -534,37 +991,6 @@ const BimaDashboard = () => {
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         
-        {/* Floating particles */}
-        <motion.div 
-          className="absolute top-10 right-10 w-2 h-2 rounded-full"
-          style={{ backgroundColor: 'rgba(243, 121, 51, 0.3)' }}
-          animate={{
-            y: [0, -20, 0],
-            opacity: [0.3, 0.8, 0.3],
-            scale: [1, 1.2, 1]
-          }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div 
-          className="absolute top-32 right-16 w-1 h-1 rounded-full"
-          style={{ backgroundColor: 'rgba(243, 200, 15, 0.4)' }}
-          animate={{
-            y: [0, -15, 0],
-            opacity: [0.4, 0.9, 0.4],
-            scale: [1, 1.5, 1]
-          }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-        <motion.div 
-          className="absolute bottom-20 right-12 w-1.5 h-1.5 rounded-full"
-          style={{ backgroundColor: 'rgba(243, 121, 51, 0.35)' }}
-          animate={{
-            y: [0, -25, 0],
-            opacity: [0.3, 0.7, 0.3],
-            scale: [1, 1.3, 1]
-          }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
 
         <motion.div 
           className="flex items-center gap-3 mb-8 relative z-10"
@@ -1350,37 +1776,6 @@ const BimaDashboard = () => {
         }}
       />
       
-      {/* Floating particles */}
-      <motion.div 
-        className="fixed top-20 left-20 w-2 h-2 rounded-full -z-10"
-        style={{ backgroundColor: 'rgba(243, 121, 51, 0.3)' }}
-        animate={{
-          y: [0, -30, 0],
-          opacity: [0.3, 0.8, 0.3],
-          scale: [1, 1.5, 1]
-        }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div 
-        className="fixed top-40 right-40 w-1 h-1 rounded-full -z-10"
-        style={{ backgroundColor: 'rgba(243, 200, 15, 0.4)' }}
-        animate={{
-          y: [0, -20, 0],
-          opacity: [0.4, 0.9, 0.4],
-          scale: [1, 2, 1]
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      />
-      <motion.div 
-        className="fixed bottom-40 left-40 w-1.5 h-1.5 rounded-full -z-10"
-        style={{ backgroundColor: 'rgba(243, 121, 51, 0.35)' }}
-        animate={{
-          y: [0, -25, 0],
-          opacity: [0.3, 0.7, 0.3],
-          scale: [1, 1.3, 1]
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-      />
     </motion.div>
   );
 };
